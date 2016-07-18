@@ -1,0 +1,43 @@
+#!/bin/bash
+
+NOMBREMAQUINA=${1}
+TAMANODISCO=${2}
+TAMANORAM=${3}
+NUMCPUS=${4}
+
+
+VM='linux'
+
+#VBoxManage  createhd --filename $VM.vdi --size TAMANODISCO
+VBoxManage  createhd --filename $NOMBREMAQUINA.vdi --size $TAMANODISCO
+
+#VBoxManage  list ostypes
+
+#VBoxManage createvm --name $VM --ostype "Ubuntu" --register
+VBoxManage createvm --name $NOMBREMAQUINA --ostype "Ubuntu" --register
+
+#VBoxManage storagectl $VM --name "SATA Controller" --add sata --controller IntelAHCI
+VBoxManage storagectl $NOMBREMAQUINA --name "SATA Controller" --add sata --controller IntelAHCI
+
+#VBoxManage storageattach $NOMBREMAQUINA --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium $NOMBREMAQUINA.vdi
+VBoxManage storageattach $NOMBREMAQUINA --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium $NOMBREMAQUINA.vdi
+
+#VBoxManage storagectl $VM --name "IDE Controller" --add ide
+VBoxManage storagectl $NOMBREMAQUINA --name "IDE Controller" --add ide
+
+#El archivo .iso esta ubicado en la misma carpeta donde estamos realizando la maquina virtual
+#VBoxManage storageattach $VM --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium ./ubuntu-server32.iso 
+#VBoxManage storageattach $NOMBREMAQUINA --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium ubuntu-server32.iso 
+
+#VBoxManage modifyvm $VM --ioapic on
+VBoxManage modifyvm $NOMBREMAQUINA --ioapic on
+
+#VBoxManage modifyvm $VM --boot1 dvd --boot2 disk --boot3 none --boot4 none
+VBoxManage modifyvm $NOMBREMAQUINA --boot1 dvd --boot2 disk --boot3 none --boot4 none
+
+#VBoxManage modifyvm $VM --memory TAMANORAM --vram 128
+VBoxManage modifyvm $NOMBREMAQUINA --memory $TAMANORAM --vram 128
+
+#VBoxManage modifyvm $VM --cpus 4
+VBoxManage modifyvm $NOMBREMAQUINA --cpus $NUMCPUS
+
